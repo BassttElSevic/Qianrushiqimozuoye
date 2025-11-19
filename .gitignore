@@ -1,0 +1,61 @@
+# Build directories
+cmake-build-debug-stm-32/
+cmake-build-*/
+build/
+
+# Compiled object files, libraries, binaries
+*.o
+*.obj
+*.elf
+*.axf
+*.bin
+*.hex
+*.map
+*.lst
+*.out
+
+# Dependency files
+*.d
+
+# STM32CubeMX generated files (optional: keep .ioc if you want to track project configuration)
+# *.ioc
+
+# IDE/editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.user
+*.user.*
+*.iml
+
+# Temporary files
+*.tmp
+*~
+*.swp
+*.swo
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment / secrets (never commit)
+.env
+secrets.*
+
+# Git LFS: consider using for large binary assets (images, large firmware blobs)
+# If you enable LFS, track large patterns like:
+# *.bin
+# *.hex
+
+# Keep source files
+# (Do NOT ignore Core/, Drivers/, LCD/, CMakeLists.txt, *.ioc if you want to track CubeMX config)
+
