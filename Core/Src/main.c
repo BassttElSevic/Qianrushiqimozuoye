@@ -175,10 +175,13 @@ int main(void)
     delay_ms(70);
     lcd_show_string(60, 270, 200, 18, 16, "@@...@@ ######### @@...@@", BLACK);//11
     HAL_Delay(60);
-
-    show_picture(30, 30, 64, 64,gImage_HEAD240240);
-  //
-  show_picture(30, 30, 64, 64,gImage_HEAD240240);
+  //show_picture(60, 50, 120, 240,(unsigned short *)gImage_HEAD240240);
+    //show_picture(60, 50, 60, 60,A);
+  HAL_Delay(100);
+//how_picture(60, 50,60,360,gImage_tct);
+//show_picture(01, 80, 360, 180,(unsigned short *)gImage_tct);
+  Display_picture(60, 50, 240, 240,(unsigned short *)gImage_tct);
+  HAL_Delay(100);
 
     lcd_show_string(60, 290, 200, 18, 16, "-------------------------", BLACK);
     delay_ms(10);
