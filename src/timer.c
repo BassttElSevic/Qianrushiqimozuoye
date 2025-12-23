@@ -48,7 +48,7 @@ void delay_ms(uint32_t ms) {
     // 简单的延时实现，实际应用中应该使用定时器或系统滴答定时器
     volatile uint32_t i, j;
     for (i = 0; i < ms; i++) {
-        for (j = 0; j < 8000; j++);
+        for (j = 0; j < DELAY_MS_LOOP_COUNT; j++);
     }
 }
 
@@ -61,6 +61,6 @@ void delay_us(uint32_t us) {
     // 简单的延时实现，实际应用中应该使用定时器
     volatile uint32_t i, j;
     for (i = 0; i < us; i++) {
-        for (j = 0; j < 8; j++);
+        for (j = 0; j < DELAY_US_LOOP_COUNT; j++);
     }
 }

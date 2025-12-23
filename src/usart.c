@@ -7,8 +7,8 @@
  * @retval None
  */
 void USART_Init(USART_TypeDef *USARTx, uint32_t baudrate) {
-    // 设置波特率 (假设系统时钟为72MHz, APB2时钟为72MHz)
-    uint32_t apbclock = 72000000;
+    // 设置波特率 (假设APB2时钟为72MHz)
+    uint32_t apbclock = APB2_CLOCK_HZ;
     uint32_t integerdivider = (25 * apbclock) / (4 * baudrate);
     uint32_t tmpreg = (integerdivider / 100) << 4;
     tmpreg |= ((integerdivider % 100) * 16 + 50) / 100;

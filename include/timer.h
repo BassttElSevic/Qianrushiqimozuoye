@@ -37,4 +37,8 @@ void delay_us(uint32_t us);
 #define TIM_EGR_UG      0x0001  // 更新事件生成
 #define TIM_SR_UIF      0x0001  // 更新中断标志
 
+// 延时函数参数（与CPU时钟相关）
+#define DELAY_MS_LOOP_COUNT  8000  // 1ms延时循环次数 (72MHz CPU)
+#define DELAY_US_LOOP_COUNT  8     // 1us延时循环次数 (72MHz CPU)
+
 #endif // TIMER_H

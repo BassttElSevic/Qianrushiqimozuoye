@@ -32,6 +32,9 @@ typedef struct {
 #define USART_SR_TXE    0x0080  // 发送数据寄存器空
 #define USART_SR_RXNE   0x0020  // 接收数据寄存器非空
 
+// 系统时钟配置
+#define APB2_CLOCK_HZ   72000000  // APB2时钟频率 (72MHz)
+
 // 函数声明
 void USART_Init(USART_TypeDef *USARTx, uint32_t baudrate);
 void USART_SendChar(USART_TypeDef *USARTx, char ch);
