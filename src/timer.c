@@ -15,10 +15,10 @@ void Timer_Init(TIM_TypeDef *TIMx, uint16_t prescaler, uint16_t period) {
     TIMx->ARR = period - 1;
     
     // 使能更新中断
-    TIMx->DIER |= 0x01;  // UIE=1
+    TIMx->DIER |= TIM_DIER_UIE;
     
     // 生成更新事件，重新初始化计数器
-    TIMx->EGR = 0x01;    // UG=1
+    TIMx->EGR = TIM_EGR_UG;
 }
 
 /**
@@ -27,7 +27,7 @@ void Timer_Init(TIM_TypeDef *TIMx, uint16_t prescaler, uint16_t period) {
  * @retval None
  */
 void Timer_Start(TIM_TypeDef *TIMx) {
-    TIMx->CR1 |= 0x01;   // CEN=1
+    TIMx->CR1 |= TIM_CR1_CEN;
 }
 
 /**
@@ -36,7 +36,7 @@ void Timer_Start(TIM_TypeDef *TIMx) {
  * @retval None
  */
 void Timer_Stop(TIM_TypeDef *TIMx) {
-    TIMx->CR1 &= ~0x01;  // CEN=0
+    TIMx->CR1 &= ~TIM_CR1_CEN;
 }
 
 /**

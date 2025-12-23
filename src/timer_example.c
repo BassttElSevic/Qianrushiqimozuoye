@@ -17,9 +17,9 @@ volatile uint32_t timer_count = 0;
  */
 void TIM2_IRQHandler(void) {
     // 检查更新中断标志
-    if (TIMER->SR & 0x01) {
+    if (TIMER->SR & TIM_SR_UIF) {
         // 清除中断标志
-        TIMER->SR &= ~0x01;
+        TIMER->SR &= ~TIM_SR_UIF;
         
         // 增加计数
         timer_count++;

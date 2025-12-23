@@ -31,4 +31,10 @@ void Timer_Stop(TIM_TypeDef *TIMx);
 void delay_ms(uint32_t ms);
 void delay_us(uint32_t us);
 
+// 定时器控制寄存器位定义
+#define TIM_CR1_CEN     0x0001  // 计数器使能
+#define TIM_DIER_UIE    0x0001  // 更新中断使能
+#define TIM_EGR_UG      0x0001  // 更新事件生成
+#define TIM_SR_UIF      0x0001  // 更新中断标志
+
 #endif // TIMER_H

@@ -15,7 +15,7 @@ void USART_Init(USART_TypeDef *USARTx, uint32_t baudrate) {
     USARTx->BRR = tmpreg;
     
     // 使能USART, 发送和接收
-    USARTx->CR1 = 0x200C;  // UE=1, TE=1, RE=1
+    USARTx->CR1 = USART_CR1_UE | USART_CR1_TE | USART_CR1_RE;
 }
 
 /**
@@ -26,7 +26,7 @@ void USART_Init(USART_TypeDef *USARTx, uint32_t baudrate) {
  */
 void USART_SendChar(USART_TypeDef *USARTx, char ch) {
     // 等待发送数据寄存器为空
-    while (!(USARTx->SR & 0x80));  // TXE标志
+    while (!(USARTx->SR & USART_SR_TXE));
     USARTx->DR = ch;
 }
 
@@ -49,6 +49,6 @@ void USART_SendString(USART_TypeDef *USARTx, const char *str) {
  */
 char USART_ReceiveChar(USART_TypeDef *USARTx) {
     // 等待接收数据寄存器非空
-    while (!(USARTx->SR & 0x20));  // RXNE标志
+    while (!(USARTx->SR & USART_SR_RXNE));
     return (char)USARTx->DR;
 }

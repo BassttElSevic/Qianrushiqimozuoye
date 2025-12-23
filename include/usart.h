@@ -23,6 +23,15 @@ typedef struct {
 #define BAUD_9600    9600
 #define BAUD_115200  115200
 
+// USART控制寄存器位定义
+#define USART_CR1_UE    0x2000  // USART使能
+#define USART_CR1_TE    0x0008  // 发送使能
+#define USART_CR1_RE    0x0004  // 接收使能
+
+// USART状态寄存器位定义
+#define USART_SR_TXE    0x0080  // 发送数据寄存器空
+#define USART_SR_RXNE   0x0020  // 接收数据寄存器非空
+
 // 函数声明
 void USART_Init(USART_TypeDef *USARTx, uint32_t baudrate);
 void USART_SendChar(USART_TypeDef *USARTx, char ch);

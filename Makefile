@@ -77,7 +77,7 @@ help:
 	@echo "  make              - 编译所有示例程序"
 	@echo "  make led_blink    - 编译LED闪烁示例"
 	@echo "  make button_input - 编译按钮输入示例"
-	@echo "  make usart_example- 编译串口通信示例"
+	@echo "  make usart_example - 编译串口通信示例"
 	@echo "  make timer_example- 编译定时器示例"
 	@echo "  make clean        - 清理所有编译文件"
 	@echo "  make help         - 显示此帮助信息"
