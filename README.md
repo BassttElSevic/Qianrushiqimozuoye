@@ -74,7 +74,7 @@
 │   └── LCD/                    # LCD 驱动
 │       ├── lcd.c
 │       ├── lcd.h
-│       ├── tct.c              # LCD 控制
+│       ├── tct.c              # LCD 图像数据 (720x720 像素图像数组)
 │       └── ...
 ├── Drivers/                    # STM32 HAL 驱动库
 │   ├── STM32F1xx_HAL_Driver/
@@ -114,8 +114,8 @@ cmake --build build
 | DHT11 | PG11 | 数据线 |
 | PCF8591 | I2C2 (SCL/SDA) | I2C 通信 |
 | LCD | FSMC | 数据和控制线 |
-| LED0 | 待查 | 状态指示 |
-| LED1 | 待查 | 状态指示 |
+| LED0 | PB5 | 状态指示 |
+| LED1 | PE5 | 状态指示 |
 | 蜂鸣器 | PB8 | 输出控制 |
 | USART1 | TX/RX | 串口通信 |
 
@@ -207,7 +207,7 @@ This is an embedded systems project based on the **STM32F103ZET6** microcontroll
 │   └── LCD/                    # LCD driver
 │       ├── lcd.c
 │       ├── lcd.h
-│       ├── tct.c              # LCD control
+│       ├── tct.c              # LCD image data (720x720 pixel image array)
 │       └── ...
 ├── Drivers/                    # STM32 HAL driver library
 │   ├── STM32F1xx_HAL_Driver/
@@ -247,8 +247,8 @@ Use ST-Link or other programming tools to flash the generated `.bin` or `.hex` f
 | DHT11 | PG11 | Data line |
 | PCF8591 | I2C2 (SCL/SDA) | I2C communication |
 | LCD | FSMC | Data and control lines |
-| LED0 | TBD | Status indicator |
-| LED1 | TBD | Status indicator |
+| LED0 | PB5 | Status indicator |
+| LED1 | PE5 | Status indicator |
 | Buzzer | PB8 | Output control |
 | USART1 | TX/RX | Serial communication |
 
