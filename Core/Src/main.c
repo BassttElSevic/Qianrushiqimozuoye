@@ -18,18 +18,22 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
+#include "i2c.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 #include "fsmc.h"
-#include "lcd.h"
-#include "delay.h"
-//#include "globals.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "globals.h"
-#include "piccc.h"
+//#include "globals.h"
+#include "tct.h"
+#include "string.h"
+#include "dht11.h"
+//#include "stdlib.h"
 //#include "lcdfont.h"
+//#include "adc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,7 +53,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-//* USER CODE BEGIN PV */
+/* USER CODE BEGIN PV */
 volatile uint8_t exit_inner_loop = 0;
 /* USER CODE END PV */
 
@@ -61,6 +65,21 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+uint8_t PCF8591_Read_AIN1(I2C_HandleTypeDef *hi2c) {
+  uint8_t cmd = 0x41;
+  uint8_t adc_data = 0;
+  HAL_I2C_Master_Transmit(hi2c, 0x90, &cmd, 1, 100);
+  HAL_I2C_Master_Receive(hi2c, 0x90, &adc_data, 1, 100);
+  return adc_data;
+}
+
+uint8_t PCF8591_Read_AIN2(I2C_HandleTypeDef *hi2c) {
+  uint8_t cmd2 = 0x42;
+  uint8_t adc_data2 = 0;
+  HAL_I2C_Master_Transmit(hi2c, 0x90, &cmd2, 1, 100);
+  HAL_I2C_Master_Receive(hi2c, 0x90, &adc_data2, 1, 100);
+  return adc_data2;
+}
 
 /* USER CODE END 0 */
 
@@ -95,10 +114,25 @@ int main(void)
   MX_GPIO_Init();
   MX_FSMC_Init();
   MX_USART1_UART_Init();
+  MX_I2C2_Init();
+  MX_USART2_UART_Init();
+  MX_ADC3_Init();
+  MX_I2C1_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start(&htim1); // Start TIM1 for DHT11 delays
     delay_init(72);
+    uint8_t humidity;
+  uint8_t MyTemP;
+  dht11_init();
+  uint8_t temperature;
+  char god[64];
+  uint16_t t = 0;
+
     led_init();
     lcd_init();
+    //adc_temperature_init();
+  //short temp;
     //lcd_show_string(30, 50, 200, 16, 16, "hello world");
   /* USER CODE END 2 */
 
@@ -108,33 +142,32 @@ int main(void)
     HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-    HAL_Delay(70);
+ HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+  HAL_Delay(70);
 
     HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-    HAL_Delay(170);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+  HAL_Delay(170);
 
     HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
-    HAL_Delay(70);
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
+  HAL_Delay(70);
 
     HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-    HAL_Delay(170);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);HAL_Delay(170);
 
     HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
-    HAL_Delay(800);
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
+  HAL_Delay(800);
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_RESET);
 
 
 
@@ -178,9 +211,9 @@ int main(void)
   //show_picture(60, 50, 120, 240,(unsigned short *)gImage_HEAD240240);
     //show_picture(60, 50, 60, 60,A);
   HAL_Delay(100);
-//how_picture(60, 50,60,360,gImage_tct);
-//show_picture(01, 80, 360, 180,(unsigned short *)gImage_tct);
-  Display_picture(60, 50, 240, 240,(unsigned short *)gImage_tct);
+//how_picture(60, 50,60,360,gImage_tct)
+// show_picture(01, 80, 360, 180,(unsigned short *)gImage_tct);
+//Display_picture(60, 50, 240, 240,(unsigned short *)gImage_tct);
   HAL_Delay(100);
 
     lcd_show_string(60, 290, 200, 18, 16, "-------------------------", BLACK);
@@ -316,7 +349,17 @@ int main(void)
     lcd_show_string(140, 370, 200, 18, 16, "20251643", BLACK);
     delay_ms(14);
 
-    HAL_Delay(2000);
+    HAL_Delay(1500);
+  lcd_show_string(60, 50, 200, 18, 16, "                         ",  BLACK);
+
+  lcd_show_string(60, 70, 200, 18, 16, "                         ", BLACK);//1
+
+  lcd_show_string(60, 250, 200, 18, 16, "                         ", BLACK);//10
+
+  lcd_show_string(60, 270, 200, 18, 16, "                         ", BLACK);//11
+
+  show_picture(01, 80, 360, 180,(unsigned short *)gImage_tct);
+
   if (exit_inner_loop == 1) {
     HAL_Delay(10);
     goto A;
@@ -554,12 +597,102 @@ int main(void)
   A:
   lcd_clear(BLUE);
   HAL_Delay(1000);
+    lcd_draw_circle(170, 240, 30,WHITE);
+    lcd_draw_circle(120, 300,70,WHITE);
+    lcd_draw_circle(300, 120, 100,WHITE);
+    lcd_draw_circle(70, 470, 120,WHITE);
+while(1){
+  // 检查是否需要读取DHT11传感器
+  dht11_read_data(&MyTemP, &humidity);
+  int len = sprintf(god, "HUMINOW:%d", humidity);
+  HAL_UART_Transmit(&huart1, (uint8_t *)god, len, 100);
+  lcd_show_string(40, 120, 200, 18, 32, god, BLUE);
+
+  HAL_UART_Transmit(&huart1, (uint8_t *)god, strlen(god), 100);
+
+  uint16_t adc_val = PCF8591_Read_AIN1(&hi2c2);
+  adc_val = 1000 - adc_val;
+  delay_ms(2);
+  while (adc_val > 700) {
+    delay_ms(9);
+    adc_val = 900 - adc_val;
+    delay_ms(9);
+  }
+
+
+
+
+
+
+
+  HAL_Delay(2);
+  //adc_val = 1000 - adc_val;
+  char send_buf[32];
+  HAL_Delay(4);
+  if (adc_val > 900) {
+    HAL_Delay(3);
+    adc_val = 900 - adc_val;
+    HAL_Delay(2);
+  }
+
+   HAL_Delay(4);
+
+  LED0_TOGGLE();
+
+  char buffer[32];
+  HAL_Delay(9);
+  if (adc_val > 700) {
+    HAL_Delay(9);
+    adc_val = 900 - adc_val;
+    HAL_Delay(9);
+    while (adc_val > 700) {
+      HAL_Delay(9);
+      adc_val = 900 - adc_val;
+      HAL_Delay(9);
+    }
+
+    sprintf(buffer, "TEMP:%d", adc_val);
+    lcd_show_string(40, 40, 200, 18, 32, buffer, BLUE);
+     sprintf(send_buf,"TEMP Value:%d\r\n",adc_val);
+      HAL_UART_Transmit(&huart1, (uint8_t *)send_buf, strlen(send_buf), 100);
+  }
+  else {
+  sprintf(buffer, "TEMP:%d", adc_val);
+  lcd_show_string(40, 40, 200, 18, 32, buffer, BLUE);
+     sprintf(send_buf,"TEMP:%d\r\n",adc_val);
+      HAL_UART_Transmit(&huart1, (uint8_t *)send_buf, strlen(send_buf), 100);
+  }
+   HAL_Delay(9);
+
+  uint8_t adc_val2 = PCF8591_Read_AIN2(&hi2c2);
+  char buffer2[32];
+  //char send_buf2[32];
+  adc_val2 = 600 - adc_val2;
+  while (adc_val2 > 400) {
+    delay_ms(2);
+    adc_val2 = 600 - adc_val2;
+    delay_ms(2);
+  }
+  sprintf(buffer2, "LIGHT:%d", adc_val2);
+  HAL_UART_Transmit(&huart1, (uint8_t *)buffer2, strlen(buffer2), 100);
+  HAL_Delay(2);
+  lcd_show_string(40, 80, 200, 18, 32, buffer2, BLUE);
+  HAL_Delay(2);
+
+  //dht11_read_data(&temperature, &humidity);
+  //int len = sprintf(god, "TEMP:%d,Humi:%d%%\r\n", temperature,humidity);
+  //sprintf(god, "TEMP:%d,Humi:%d%%\r\n", temperature,humidity);
+  //HAL_UART_Transmit(&huart2, (uint8_t *)god, len, 100);
+  //lcd_show_string(40, 120, 200, 18, 32, god, BLUE);
+  //temp = adc_get_temperature();
+
+
+}    //5
   //lcd_clear(BLUE);
 
 
   /* USER CODE END 3 */
 }
-
 
 /**
   * @brief System Clock Configuration
@@ -569,6 +702,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -595,6 +729,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV2;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }

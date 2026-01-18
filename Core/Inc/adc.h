@@ -1,9 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    usart.h
+  * @file    adc.h
   * @brief   This file contains all the function prototypes for
-  *          the usart.c file
+  *          the adc.c file
   ******************************************************************************
   * @attention
   *
@@ -18,8 +18,8 @@
   */
 /* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USART_H__
-#define __USART_H__
+#ifndef __ADC_H__
+#define __ADC_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,18 +32,24 @@ extern "C" {
 
 /* USER CODE END Includes */
 
-extern UART_HandleTypeDef huart1;
-
-extern UART_HandleTypeDef huart2;
+extern ADC_HandleTypeDef hadc3;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void MX_USART1_UART_Init(void);
-void MX_USART2_UART_Init(void);
+void MX_ADC3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+
+  void adc_init(void);
+
+  void adc_temperature_init(void);
+  void adc_channel_set(ADC_HandleTypeDef *adc_handle, uint32_t ch, uint32_t rank, uint32_t stime);
+  uint32_t adc_get_result(uint32_t ch);
+  uint32_t adc_get_result_average(uint32_t ch, uint8_t times);
+  short adc_get_temperature(void);
+
 
 /* USER CODE END Prototypes */
 
@@ -51,5 +57,5 @@ void MX_USART2_UART_Init(void);
 }
 #endif
 
-#endif /* __USART_H__ */
+#endif /* __ADC_H__ */
 

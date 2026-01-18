@@ -18,21 +18,16 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-//#include "main.h"
+#include "main.h"
 #include "stm32f1xx_it.h"
-#include "usart.h"
-#include "lcd.h"
-#include "string.h"
-//#include "main.c"
-//#include "main.h"
-#include "usart.h"
-#include "gpio.h"
-#include "fsmc.h"
-//#include "globals.h"
-//#include "main.c"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "globals.h"
+#include "string.h"
+#include "dht11.h"
+#include "ASCIIdisplay.h"
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -212,9 +207,6 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles EXTI line3 interrupt.
   */
-/**
-  * @brief This function handles EXTI line3 interrupt.
-  */
 void EXTI3_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI3_IRQn 0 */
@@ -222,10 +214,50 @@ void EXTI3_IRQHandler(void)
   exit_inner_loop = 1;
   HAL_Delay(10);
   lcd_clear(WHITE);
-  //exit_inner_loop = 1;
+  display_quick(10,400,6,46,THANKU);
+  display(1,1,26,53,scp);
+  delay_ms(20);
+  while (1) {
+      //lcd_clear(WHITE);
+    display(1,1,26,53,scp);
+    delay_ms(40);
+    display_in_RED(1,1,26,53,scp);
+    display_quick(1, 1, 26, 53,scp);
+    for (int i = 0; i < 3; i++) {
+      display_quick(1, 1, 26, 53,scp_ver2);
+      //display_quick(1, 1, 26, 53,scp_ver3);
+      display_quick(1, 1, 26, 53,scp_ver4);
+      //display_quick(1, 1, 26, 53,scp_ver5);
+
+      display_quick(1, 1, 26, 53,scp_ver7);
+      //display_quick(1, 1, 26, 53,scp_ver8);
+      display_quick(1, 1, 26, 53,scp_ver9);
+      //display_quick(1, 1, 26, 53,scp_ver10);
+      display_quick(1, 1, 26, 53,scp_ver11);
+      //display_quick(1, 1, 26, 53,scp_ver12);
+      display_quick(1, 1, 26, 53,scp_ver13);
+    }
+    display_quick(1, 1, 26, 53,scp_ver2);
+    display_in_RED(1,1,26,53,scp_ver2);
+    delay_ms(3000);
+    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
+    HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    delay_ms(50);
+    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_RESET);
+    HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    //delay_ms(3);
+    //display(1,1,26,53,scp);
+    //delay_ms(360);
+
+  }
+
+  // 设置一个标志位而不是直接读取传感器
+  // 在主循环中检测这个标志位并执行相应操作
+  // 这样可以避免在中断中执行耗时操作
 
   /* USER CODE END EXTI3_IRQn 0 */
-  HAL_Delay(10);
   HAL_GPIO_EXTI_IRQHandler(KEY0_Pin);
   /* USER CODE BEGIN EXTI3_IRQn 1 */
 
@@ -237,9 +269,11 @@ void EXTI3_IRQHandler(void)
   */
 void EXTI4_IRQHandler(void)
 {
-  /* USER CODE BEGIN EXTI4_IRQn 0
-   *
-   */
+  /* USER CODE BEGIN EXTI4_IRQn 0 */
+
+  /* USER CODE END EXTI4_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(KEY1_Pin);
+  /* USER CODE BEGIN EXTI4_IRQn 1 */
   HAL_Delay(10);
 
   exit_inner_loop = 1;
@@ -249,12 +283,12 @@ void EXTI4_IRQHandler(void)
   HAL_Delay(10);
   lcd_fill(26, 26, 49, 106, BLACK);
   lcd_fill(23, 23, 43, 100, WHITE);
-  lcd_fill(203,103,506,126,BLACK);
-  lcd_fill(200,100,500,120,GRAY);
-  lcd_fill(183,143,503,153,BLACK);
-  lcd_fill(180,140,500,150,GRAY);
-  lcd_fill(123,173,503,193,BLACK);
-  lcd_fill(120,170,500,190,GRAY);
+  //lcd_fill(203,103,506,126,BLACK);
+  //lcd_fill(200,100,500,120,GRAY);
+  //lcd_fill(183,143,503,153,BLACK);
+  //lcd_fill(180,140,500,150,GRAY);
+ // lcd_fill(123,173,503,193,BLACK);
+  //lcd_fill(120,170,500,190,GRAY);
   //lcd_fill(200,100,500,120,GRAY);
   //lcd_draw_rectangle(23, 23, 43, 100, WHITE);
   Chinese_Show_one(20, 20, 31, 16, 0);
@@ -263,21 +297,17 @@ void EXTI4_IRQHandler(void)
   lcd_fill_circle(120, 580, 150, YELLOW);
   HAL_Delay(100);
   lcd_fill_circle(265, 500, 200, WHITE);
-  lcd_show_string(20, 60, 16, 16, 2, "STM32F103ZET6", WHITE);
+  //lcd_show_string(45, 100, 200, 18, 24, "STM32F103ZET6", BLUE);
+  //lcd_show_string(60, 120, 210, 18, 12, "In labs of silicon and coded light,", BLUE);
+  //lcd_show_string(20, 60, 16, 16, 2, "STM32F103ZET6", WHITE);
   HAL_Delay(3500);
   //goto A;
 
   HAL_Delay(10);
   exit_inner_loop = 1;
-  //clear_screen_flag = 1;
-
-  /* USER CODE END EXTI4_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(KEY1_Pin);
-  /* USER CODE BEGIN EXTI4_IRQn 1 */
-
   /* USER CODE END EXTI4_IRQn 1 */
 }
-
 
 /* USER CODE BEGIN 1 */
 

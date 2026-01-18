@@ -33,10 +33,29 @@ enable_language(C ASM)
 
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME}
-        LCD/piccc.h)
+        Core/LCD/piccc.h
+        Core/LCD/tct.c
+        Core/LCD/delay.c
+        Core/LCD/lcd_ex.c
+        Core/LCD/lcd.c
+        Core/LCD/led.c
+        Core/LCD/sys.c
+        Core/Src/adc.c
+        Core/Inc/adc.h
+        Core/Src/ASCIIdisplay.c
+        Core/Inc/ASCIIdisplay.h
+        Core/DHT11/dht11.c
+        Core/DHT11/dht11.h
+)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
+
+# Include directories setup
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/LCD
+    Core/DHT11
+)
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
@@ -48,12 +67,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
 )
 
-# Add include paths
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    LCD
-    # Add user include paths here
-)
-
 # Link libraries
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user libraries here
@@ -61,12 +74,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
 
 # Link sources
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    LCD/delay.c
-    LCD/lcd_ex.c
-    LCD/lcd.c
-    LCD/led.c
-    LCD/sys.c
-    LCD/usart.c
     # Add user sources here
 )
 
